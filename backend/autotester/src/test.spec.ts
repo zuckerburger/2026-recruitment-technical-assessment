@@ -22,6 +22,15 @@ describe("Task 1", () => {
       const response = await getTask1("");
       expect(response.status).toBe(400);
     });
+
+    it("extra spaces", async () => {
+      const response = await getTask1("   Riz@z   RISO00tto!   ");
+      expect(response.body).toStrictEqual({ msg: "Rizz Risotto" });
+    });
+    it("other whitespace chars", async () => {
+      const response = await getTask1("\t\n Riz@z\n\t \s\s  RISO00tto!\t \n  ");
+      expect(response.body).toStrictEqual({ msg: "Rizz Risotto" });
+    });
   });
 });
 
