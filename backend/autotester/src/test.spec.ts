@@ -56,7 +56,7 @@ describe("Task 2", () => {
       const meatball = {
         type: "recipe",
         name: "Meatball",
-        requiredItems: [{ name: "Beef", quantity: 1 }],
+        requiredItems: [{ name: "Beef", quantity: 0 }],
       };
       const resp1 = await putTask2(meatball);
       expect(resp1.status).toBe(200);
@@ -101,6 +101,63 @@ describe("Task 2", () => {
         cookTime: 8,
       });
       expect(resp3.status).toBe(400);
+    });
+    it("extra fields", async () => {
+      const entries = [
+        { type: "ingredient", name: "Gary", cookTime: 6, letdown: "underrated" },
+        { type: "ingredient", name: "Moore", cookTime: 1, yesterday: "i woke up sucking a lemon"},
+        {
+        type: "recipe",
+        name: "Elliot",
+        requiredItems: [{ name: "Bruh", quantity: 1, kid: "a" }],
+        },
+        {
+        type: "recipe",
+        name: "Smith",
+        requiredItems: [{ name: "Bruh", quantity: 1 }],
+        say: "yes"
+        }
+      ];
+      for (const entry of entries) {
+        const resp = await putTask2(entry);
+        expect(resp.status).toBe(400);
+      }
+    });
+    it("Unique recipe names", async () => {
+      const resp = await putTask2({
+        type: "recipe",
+        name: "SRV",
+        requiredItems: [{ name: "Bruh", quantity: 2 }, {name: "Bruh", quantity: 0 }],
+      });
+      expect(resp.status).toBe(400);
+    });
+    it("Missing fields", async () => {
+      const entries = [
+        { type: "ingredient", name: "Greeny" },
+        { type: "ingredient", cookTime: 1},
+        {
+        type: "recipe",
+        name: "doctor_penguin"
+        },
+        {
+        type: "recipe",
+        requiredItems: [{ name: "Bruh", quantity: 1 }],
+        },
+        {
+        type: "recipe",
+        name: "doctor_penguin",
+        requiredItems: [{ name: "Bruh" }],
+        },
+        {
+        type: "recipe",
+        name: "doctor_penguin",
+        requiredItems: [{quantity: 1}],
+        }
+      ];
+      for (const entry of entries) {
+        const resp = await putTask2(entry);
+        expect(resp.status).toBe(400);
+      }
     });
   });
 });
