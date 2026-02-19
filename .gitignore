@@ -1,0 +1,4 @@
+backend/autotester/node_modules/
+backend/py_template/venv/
+backend/ts_template/dist/
+backend/ts_template/node_modules/
